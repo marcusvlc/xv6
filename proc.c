@@ -88,7 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p -> priority = 10; // Default priority (lowest)
+  p->priority = 10; // Default priority (lowest)
 
   release(&ptable.lock);
 
@@ -577,4 +577,32 @@ getusage(int pid){
   }   
   release(&ptable.lock);
   return 25;
+}
+int getpriority(int pid){
+  struct proc *p;
+
+  acquire(&ptable.lock); // Pega a tabela de processos
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
+    if(p -> pid == pid){
+      break;
+    }
+  }
+  
+  release(&ptable.lock);
+  return p->priority;
+}
+
+int setpriority(int pid, int prio){
+  struct proc *p;
+
+  acquire(&ptable.lock); // Pega a tabela de processos
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
+    if(p -> pid == pid){
+      p->priority = prio;
+      break;
+    }
+  }
+  
+  release(&ptable.lock);
+  return pid;
 }

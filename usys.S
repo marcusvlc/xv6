@@ -31,4 +31,5 @@ SYSCALL(sleep)
 SYSCALL(uptime)
 SYSCALL(cps)
 SYSCALL(getusage)
-
+SYSCALL(getpriority)
+SYSCALL(setpriority)

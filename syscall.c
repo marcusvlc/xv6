@@ -105,6 +105,10 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_cps(void);
 extern int sys_getusage(void);
+extern int sys_getpriority(void);
+extern int sys_setpriority(void);
+<<<<<<< HEAD
+
 
 
 static int (*syscalls[])(void) = {
@@ -131,7 +135,9 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_cps]     sys_cps,
 [SYS_getusage]  sys_getusage,
-};
+[SYS_getpriority]     sys_getpriority,
+[SYS_setpriority]     sys_setpriority,
+}
 
 void
 syscall(void)

@@ -1,4 +1,5 @@
 // System call numbers
+<<<<<<< HEAD
 #define SYS_fork    1
 #define SYS_exit    2
 #define SYS_wait    3
@@ -21,6 +22,6 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 #define SYS_cps    22
+#define SYS_getpriority     23
+#define SYS_setpriority     24
 #define SYS_getusage 25
-
-
