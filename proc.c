@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p -> priority = 10; // Default priority (lowest)
 
   release(&ptable.lock);
 
@@ -531,4 +532,29 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+// Lista os processos com seus respectivos estados
+int cps() {
+  struct proc *p;
+
+  // Permite interrupções nesse processo.
+  sti();
+
+  acquire(&ptable.lock); // Pega a tabela de processos
+  cprintf("name \t pID \t priority \t  state \n");
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos, printando as informações
+      if ( p->state == SLEEPING )
+        cprintf("%s \t %d  \t %d \t  SLEEPING \n ", p->name, p->pid, p->priority);
+      else if ( p->state == RUNNING )
+        cprintf("%s \t %d  \t %d \t  RUNNING \n ", p->name, p->pid, p->priority);
+      else if( p->state == ZOMBIE)
+        cprintf("%s \t %d  \t %d \t  ZOMBIE \n ", p->name, p->pid, p->priority);
+     else if( p->state == RUNNABLE)
+        cprintf("%s \t %d  \t %d \t  RUNNABLE \n ", p->name, p->pid, p->priority);
+  }
+
+  release(&ptable.lock);
+
+  return 22;
 }
