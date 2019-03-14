@@ -90,6 +90,14 @@ sys_uptime(void)
   return xticks;
 }
 
-int sys_getusage(pid){
-  return getusage();
+int sys_cps(void) { return cps(); }
+
+int sys_getusage(void) {
+  int pid;
+
+  if(argint(0, &pid) < 0)
+    return -1;
+
+  return getusage(pid);
 }
+

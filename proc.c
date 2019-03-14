@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p -> priority = 10; // Default priority (lowest)
 
   release(&ptable.lock);
 
@@ -535,18 +536,42 @@ procdump(void)
   }
 }
 
+// Lista os processos com seus respectivos estados
+int cps() {
+  struct proc *p;
+
+  // Permite interrupções nesse processo.
+  sti();
+
+  acquire(&ptable.lock); // Pega a tabela de processos
+  cprintf("name \t pID \t priority \t  state \n");
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos, printando as informações
+      if ( p->state == SLEEPING )
+        cprintf("%s \t %d  \t %d \t          SLEEPING \n", p->name, p->pid, p->priority);
+      else if ( p->state == RUNNING )
+        cprintf("%s \t %d  \t %d \t          RUNNING \n", p->name, p->pid, p->priority);
+      else if( p->state == ZOMBIE)
+        cprintf("%s \t %d  \t %d \t          ZOMBIE \n", p->name, p->pid, p->priority);
+     else if( p->state == RUNNABLE)
+        cprintf("%s \t %d  \t %d \t          RUNNABLE \n", p->name, p->pid, p->priority);
+  }
+
+  release(&ptable.lock);
+
+  return 22;
+}
+
 // Getting number of times the process won the cpu
 
 int 
 getusage(int pid){
 
   struct proc *p;
+
   acquire(&ptable.lock);
-  for(int i = 0; i < NPROC; i++)
-  {
-    p = &ptable.proc[i];
-    if(p -> pid == pid){
-      printf("The process %s won the CPU %d times", p->name, p->cputimes);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      cprintf("The process %s won the CPU %d times\n", p->name, p->cputimes);
       break;
     }    
   }   

@@ -3,7 +3,7 @@
 #include "user.h"
 #include "fcntl.h"
 
-int main (int argc, char *argv[]) {
-	getusage(atoi(argv[1]));
-	exit();
+int main(int argc, char const *argv[]) {
+    cps();
+    exit();
 }
