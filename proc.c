@@ -561,23 +561,26 @@ int cps() {
   return 22;
 }
 
-// Getting number of times the process won the cpu
+// Obtendo o número de vezes que um processo ganha a CPU
 
 int 
 getusage(int pid){
 
   struct proc *p;
 
-  acquire(&ptable.lock);
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+  acquire(&ptable.lock); // Pega a tabela de processos
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
     if(p->pid == pid){
-      cprintf("The process %s won the CPU %d times\n", p->name, p->cputimes);
+      cprintf("O processo %s ganhou a CPU %d vezes\n", p->name, p->cputimes);
       break;
     }    
   }   
   release(&ptable.lock);
   return 25;
 }
+
+// Obtendo prioridade
+
 int getpriority(int pid){
   struct proc *p;
 
@@ -591,6 +594,8 @@ int getpriority(int pid){
   release(&ptable.lock);
   return p->priority;
 }
+
+// Alterando prioridade
 
 int setpriority(int pid, int prio){
   struct proc *p;
