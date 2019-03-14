@@ -121,6 +121,8 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 int             cps(void);
+int             getpriority(int pid);
+int             setpriority(int pid, int prio);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
