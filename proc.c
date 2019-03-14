@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p -> priority = 10; // Default priority (lowest)
 
   release(&ptable.lock);
 
@@ -531,4 +532,9 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+void
+ps(void) {
+
 }
