@@ -554,6 +554,7 @@ int cps() {
         cprintf("%s \t %d  \t %d \t        ZOMBIE \n", p->name, p->pid, p->priority);
      else if( p->state == RUNNABLE)
         cprintf("%s \t %d  \t %d \t        RUNNABLE \n", p->name, p->pid, p->priority);
+        
   }
 
   release(&ptable.lock);
