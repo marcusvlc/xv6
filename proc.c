@@ -94,6 +94,7 @@ found:
   // Allocate kernel stack.
   if((p->kstack = kalloc()) == 0){
     p->state = UNUSED;
+    p->cputimes = 0;
     return 0;
   }
   sp = p->kstack + KSTACKSIZE;
@@ -342,6 +343,7 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
+      p->cputimes = p->cputimes + 1;
 
       swtch(&(c->scheduler), p->context);
       switchkvm();
@@ -531,4 +533,23 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+// Getting number of times the process won the cpu
+
+int 
+getusage(int pid){
+
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(int i = 0; i < NPROC; i++)
+  {
+    p = &ptable.proc[i];
+    if(p -> pid == pid){
+      printf("The process %s won the CPU %d times", p->name, p->cputimes);
+      break;
+    }    
+  }   
+  release(&ptable.lock);
+  return 25;
 }
