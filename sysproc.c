@@ -92,14 +92,22 @@ sys_uptime(void)
 
 int sys_cps(void) { return cps(); }
 
-extern int getpriority(int);
+int sys_getusage(void) {
+
+  int pid;
+
+  if(argint(0, &pid) < 0)
+    return -1;
+
+  return getusage(pid);
+}
 
 int sys_getpriority(void) {
   int pid;
 
   if(argint(0, &pid) < 0)
     return -1;
-  
+
   return getpriority(pid);
 }
 
@@ -114,3 +122,4 @@ int sys_setpriority(void) {
   
   return setpriority(pid,prio);
 }
+

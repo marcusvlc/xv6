@@ -95,6 +95,7 @@ found:
   // Allocate kernel stack.
   if((p->kstack = kalloc()) == 0){
     p->state = UNUSED;
+    p->cputimes = 0;
     return 0;
   }
   sp = p->kstack + KSTACKSIZE;
@@ -343,6 +344,7 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
+      p->cputimes = p->cputimes + 1;
 
       swtch(&(c->scheduler), p->context);
       switchkvm();
@@ -542,16 +544,16 @@ int cps() {
   sti();
 
   acquire(&ptable.lock); // Pega a tabela de processos
-  cprintf("name \t pID \t priority \t  state \n");
+  cprintf("name \t pID \t priority \t state \n");
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos, printando as informações
       if ( p->state == SLEEPING )
-        cprintf("%s \t %d  \t %d \t  SLEEPING \n ", p->name, p->pid, p->priority);
+        cprintf("%s \t %d  \t %d \t         SLEEPING \n", p->name, p->pid, p->priority);
       else if ( p->state == RUNNING )
-        cprintf("%s \t %d  \t %d \t  RUNNING \n ", p->name, p->pid, p->priority);
+        cprintf("%s \t %d  \t %d \t         RUNNING \n", p->name, p->pid, p->priority);
       else if( p->state == ZOMBIE)
-        cprintf("%s \t %d  \t %d \t  ZOMBIE \n ", p->name, p->pid, p->priority);
+        cprintf("%s \t %d  \t %d \t         ZOMBIE \n", p->name, p->pid, p->priority);
      else if( p->state == RUNNABLE)
-        cprintf("%s \t %d  \t %d \t  RUNNABLE \n ", p->name, p->pid, p->priority);
+        cprintf("%s \t %d  \t %d \t         RUNNABLE \n", p->name, p->pid, p->priority);
   }
 
   release(&ptable.lock);
@@ -559,6 +561,23 @@ int cps() {
   return 22;
 }
 
+// Getting number of times the process won the cpu
+
+int 
+getusage(int pid){
+
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      cprintf("The process %s won the CPU %d times\n", p->name, p->cputimes);
+      break;
+    }    
+  }   
+  release(&ptable.lock);
+  return 25;
+}
 int getpriority(int pid){
   struct proc *p;
 

@@ -24,6 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int cps(void);
+int getusage(int pid);
 int getpriority(int pid);
 int setpriority(int pid, int prio);
 
