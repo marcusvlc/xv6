@@ -555,7 +555,8 @@ int cps() {
         cprintf("%s \t %d  \t %d \t        ZOMBIE \n", p->name, p->pid, p->priority);
      else if( p->state == RUNNABLE)
         cprintf("%s \t %d  \t %d \t        RUNNABLE \n", p->name, p->pid, p->priority);
-
+     else if( p->state == EMBRYO)
+        cprintf("%s \t %d  \t %d \t        EMBRYO \n", p->name, p->pid, p->priority);
   }
 
   release(&ptable.lock);
@@ -585,16 +586,18 @@ getusage(int pid){
 
 int getpriority(int pid){
   struct proc *p;
+  int prioridade = -1;
 
   acquire(&ptable.lock); // Pega a tabela de processos
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
-    if(p -> pid == pid){
+    if(p -> pid == pid && p->state != UNUSED && p->state != EMBRYO){  // Processos UNUSED ficam com pID 0
+      prioridade = p -> priority;
       break;
     }
   }
   
   release(&ptable.lock);
-  return p->priority;
+  return prioridade;
 }
 
 // Alterando prioridade
