@@ -20,9 +20,13 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+// Assinatura do tratador de interrupcao
+static int interruptProcess(void);
+
 void
 pinit(void)
 {
+  interruptProcess();
   initlock(&ptable.lock, "ptable");
 }
 
@@ -612,4 +616,9 @@ int setpriority(int pid, int prio){
   
   release(&ptable.lock);
   return pid;
+}
+
+int interruptProcess(void) {
+  cprintf("a-------\n");
+  return -1;
 }
