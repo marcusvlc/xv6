@@ -7,6 +7,7 @@
 #include "proc.h"
 #include "spinlock.h"
 
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -20,13 +21,9 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
-// Assinatura do tratador de interrupcao
-static int interruptProcess(void);
-
 void
 pinit(void)
 {
-  interruptProcess();
   initlock(&ptable.lock, "ptable");
 }
 
@@ -618,7 +615,12 @@ int setpriority(int pid, int prio){
   return pid;
 }
 
-int interruptProcess(void) {
-  cprintf("a-------\n");
+int interruptProcess(int ticks) {
+
+
+  if(ticks == 1000) {
+      cprintf("%d ---", ticks);
+  }
+  
   return -1;
-}
+} 
