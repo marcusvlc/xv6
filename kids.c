@@ -6,34 +6,31 @@
 int main(int argc, char *argv[]) {
 
     int k, n, id;
-    double x = 0, z, d;
 
     if(argc < 2)
-        n = 1;  // default value
+        n = 1;  // quant filhos default 
     else 
-        n = atoi(argv[1]); // from command line
-    if(n < 0 || n > 20)
-        n = 2;
-    if(argc < 3)
-        d = 1.0;
-    else 
-        d = atoi(argv[2]);
+        n = atoi(argv[1]); // quant filhos linha comando
     
-    x = 0;
+    if(n < 0 || n > 20) // validar quant filhos
+        n = 1;
+    
     id = 0;
     for(k = 0; k < n; k++){
         id = fork();
-        if(id > 0){ // pai
+        if(id == 0){ // filho
             cps();
-            wait();
-        } else { // filho
+            sleep(300);
             cps();
-            for(z = 0; z < 8000000.0; z+=d){   // Cálculo pra consumir tempo (sleep)
-                x = x * 3.14 * 89.64; 
-            }
-            break;
-        }
+            exit();
+        }        
     }
+
+    if(id > 0){ // pai
+        for(k = 0; k < n; k++){
+            wait();
+        }    
+    }    
 
     exit(); 
 
