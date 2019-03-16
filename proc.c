@@ -616,11 +616,7 @@ int setpriority(int pid, int prio){
 }
 
 int interruptProcess(int ticks) {
-
-
-  if(ticks == 1000) {
-      cprintf("%d ---", ticks);
-  }
+    cprintf("%d ---", ticks);
   
   return -1;
 } 
