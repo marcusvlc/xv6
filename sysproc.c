@@ -123,3 +123,12 @@ int sys_setpriority(void) {
   return setpriority(pid,prio);
 }
 
+int sys_children(void) {
+  int n;
+
+  if(argint(0, &n) < 0)
+    return -1;
+
+  return children(n);
+}
+

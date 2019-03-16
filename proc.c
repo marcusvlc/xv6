@@ -544,17 +544,19 @@ int cps() {
   sti();
 
   acquire(&ptable.lock); // Pega a tabela de processos
-  cprintf("name \t pID \t priority\t state \n");
+  cprintf("name \t pID \t priority \t state \n");
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos, printando as informações
       
-      if ( p->state == SLEEPING )
-        cprintf("%s \t %d  \t %d \t        SLEEPING \n", p->name, p->pid, p->priority);
-      else if ( p->state == RUNNING )
-        cprintf("%s \t %d  \t %d \t        RUNNING \n", p->name, p->pid, p->priority);
-      else if( p->state == ZOMBIE)
-        cprintf("%s \t %d  \t %d \t        ZOMBIE \n", p->name, p->pid, p->priority);
-     else if( p->state == RUNNABLE)
-        cprintf("%s \t %d  \t %d \t        RUNNABLE \n", p->name, p->pid, p->priority);
+    if ( p->state == SLEEPING )
+      cprintf("%s \t %d \t %d \t SLEEPING \n", p->name, p->pid, p->priority);
+    else if ( p->state == RUNNING )
+      cprintf("%s \t %d \t %d \t RUNNING \n", p->name, p->pid, p->priority);
+    else if( p->state == ZOMBIE)
+      cprintf("%s \t %d \t %d \t ZOMBIE \n", p->name, p->pid, p->priority);
+    else if( p->state == RUNNABLE)
+      cprintf("%s \t %d \t %d \t RUNNABLE \n", p->name, p->pid, p->priority);
+    else if( p->state == EMBRYO)
+      cprintf("%s \t %d \t %d \t EMBRYO \n", p->name, p->pid, p->priority);
 
   }
 
@@ -613,3 +615,59 @@ int setpriority(int pid, int prio){
   release(&ptable.lock);
   return pid;
 }
+
+// Criando n filhos
+
+int children(int n){
+  double result = 0;
+  /*int id = fork();
+  if(id == 5) {
+    cprintf("FILHAO COMECOU !");  
+    for(int i = 0; i < 999999999999999; i++){ // Cálculo pra consumir tempo (sleep)
+      result = i * 3.14654561541618 * 89.64495158116156568; 
+    }
+    cprintf("FILHAO TERMINOU !");  
+  } else {
+    cprintf("PAIZAO COMECOU !");  
+    wait();
+    cprintf("PAIZAO TERMINOU !");  
+  }*/
+  
+
+  return result; 
+}
+
+/*
+for(int i = 0; i < 800000000; i++){ // Cálculo pra consumir tempo (sleep)
+      result = i * 3.14 * 89.64; 
+}
+
+*/
+
+/*
+
+  int id;
+  double result = 0;
+  
+  id = fork();
+  cprintf("%d \n", id);
+  if (id > 0) {                         // Se for o pai
+    cprintf("PAIZAO !\n");
+    for(int i = 0; i < 800000000; i++){ // Cálculo pra consumir tempo (sleep)
+      result = i * 3.14 * 89.64; 
+    }
+    wait();
+  } else if(id == 0) {                  // Se for filho
+    cprintf("FILHAO COMECOU !");
+    for(int i = 0; i < 800000000; i++){ // Cálculo pra consumir tempo (sleep)
+      result = i * 3.14 * 89.64; 
+    }
+    cprintf("FILHAO TERMINOU !"); 
+  } else { 
+      cprintf("FALHOU !");  
+  }
+  
+  cprintf("PAIZAO TERMINOU !");
+  return result; // Só pra retornar
+
+*/

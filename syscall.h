@@ -24,3 +24,4 @@
 #define SYS_getpriority     23
 #define SYS_setpriority     24
 #define SYS_getusage 25
+#define SYS_children 26

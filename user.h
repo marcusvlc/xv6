@@ -27,6 +27,7 @@ int cps(void);
 int getusage(int pid);
 int getpriority(int pid);
 int setpriority(int pid, int prio);
+int children(int n);
 
 // ulib.c
 int stat(const char*, struct stat*);
