@@ -107,7 +107,6 @@ extern int sys_cps(void);
 extern int sys_getusage(void);
 extern int sys_getpriority(void);
 extern int sys_setpriority(void);
-extern int sys_children(void);
 
 
 static int (*syscalls[])(void) = {
@@ -136,7 +135,6 @@ static int (*syscalls[])(void) = {
 [SYS_getusage]  sys_getusage,
 [SYS_getpriority]     sys_getpriority,
 [SYS_setpriority]     sys_setpriority,
-[SYS_children]     sys_children,
 };
 
 void
