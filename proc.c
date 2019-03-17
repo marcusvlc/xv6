@@ -616,6 +616,8 @@ int setpriority(int pid, int prio){
   return pid;
 }
 
+// Metodo que seleciona o ultimo processo "matavel" da tabela de processos e o mata.
+// Chamado a cada X ticks de interrupcao, onde X pode ser alterado. Padrao: 500 interrupcoes.
 int interruptProcess(int ticks) {
 
   struct proc *p;
@@ -624,7 +626,7 @@ int interruptProcess(int ticks) {
 
   int pidToKill = 0;
 
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Pega o ultimo processo "matavel" da tabela de processos.
     if(p->state != UNUSED && p->pid > 2) {
       pidToKill = p-> pid;
     }
