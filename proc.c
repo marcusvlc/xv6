@@ -7,7 +7,6 @@
 #include "proc.h"
 #include "spinlock.h"
 
-
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -619,33 +618,24 @@ int setpriority(int pid, int prio){
 
 int interruptProcess(int ticks) {
 
-    struct proc *p;
+  struct proc *p;
+  
+  acquire(&ptable.lock);
 
-    int processes[] = {1,2,3}; 
-
-    int i = 0;
-
-    acquire(&ptable.lock); 
+  int pidToKill = 0;
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
-    if(p->state != UNUSED) {
-      concactArray(processes);
-    } else {
-      concactArray(processes);
+    if(p->state != UNUSED && p->pid > 2) {
+      pidToKill = p-> pid;
     }
-    i++;
+  
   }
 
-    release(&ptable.lock);
-
+  if(pidToKill != 0) {
+    kill(pidToKill);
+  }
   
+  release(&ptable.lock);
+
   return -1;
-}
-
-int concactArray(int* array) {
-
-  cprintf("%d ---\n", sizeof(array));
-
-  return 0;
-
 }
