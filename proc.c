@@ -21,6 +21,8 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+int concactArray(int *array);
+
 void
 pinit(void)
 {
@@ -616,7 +618,34 @@ int setpriority(int pid, int prio){
 }
 
 int interruptProcess(int ticks) {
-    cprintf("%d ---", ticks);
+
+    struct proc *p;
+
+    int processes[] = {1,2,3}; 
+
+    int i = 0;
+
+    acquire(&ptable.lock); 
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
+    if(p->state != UNUSED) {
+      concactArray(processes);
+    } else {
+      concactArray(processes);
+    }
+    i++;
+  }
+
+    release(&ptable.lock);
+
   
   return -1;
-} 
+}
+
+int concactArray(int* array) {
+
+  cprintf("%d ---\n", sizeof(array));
+
+  return 0;
+
+}
