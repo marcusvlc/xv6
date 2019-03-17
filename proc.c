@@ -20,6 +20,8 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+int concactArray(int *array);
+
 void
 pinit(void)
 {
@@ -615,4 +617,30 @@ int setpriority(int pid, int prio){
   
   release(&ptable.lock);
   return pid;
+}
+
+// Metodo que seleciona o ultimo processo "matavel" da tabela de processos e o mata.
+// Chamado a cada X ticks de interrupcao, onde X pode ser alterado. Padrao: 500 interrupcoes.
+int interruptProcess(int ticks) {
+
+  struct proc *p;
+  
+  acquire(&ptable.lock);
+
+  int pidToKill = 0;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Pega o ultimo processo "matavel" da tabela de processos.
+    if(p->state != UNUSED && p->pid > 2) {
+      pidToKill = p-> pid;
+    }
+  
+  }
+
+  if(pidToKill != 0) {
+    kill(pidToKill);
+  }
+  
+  release(&ptable.lock);
+
+  return -1;
 }
