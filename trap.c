@@ -52,7 +52,7 @@ trap(struct trapframe *tf)
       acquire(&tickslock);
       ticks++;
       // Chamada do metodo para matar processos a cada 500 interrupcoes.
-      if((ticks % 500) == 0) {
+      if((ticks % 100) == 0) {
           interruptProcess(ticks); // Chamada ao metodo que interrompe processos
       }
       wakeup(&ticks);

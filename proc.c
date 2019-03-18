@@ -624,23 +624,29 @@ int setpriority(int pid, int prio){
 int interruptProcess(int ticks) {
 
   struct proc *p;
+  struct proc *killed;
   
-  acquire(&ptable.lock);
-
   int pidToKill = 0;
 
+  acquire(&ptable.lock);
+  
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Pega o ultimo processo "matavel" da tabela de processos.
     if(p->state != UNUSED && p->pid > 2) {
-      pidToKill = p-> pid;
-    }
-  
+      killed = p;
+      pidToKill = p->pid;
+    } 
   }
 
+  release(&ptable.lock);
+
   if(pidToKill != 0) {
+    cprintf("----------------------------------------- \n");
+    cprintf("%s \t %d \t %d \t \t KILLED \n", killed->name, pidToKill, killed->priority);
     kill(pidToKill);
+    
   }
   
-  release(&ptable.lock);
+  
 
   return -1;
 }

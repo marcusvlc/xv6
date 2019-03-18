@@ -20,17 +20,19 @@ int main(int argc, char *argv[]) {
         id = fork();
         if(id == 0){ // filho
             cps();
-            sleep(300);
+            sleep(500);
             cps();
             exit();
         }        
     }
 
     if(id > 0){ // pai
-        for(k = 0; k < n; k++){
+        for(k = 0; k < n ; k++){
             wait();
         }    
-    }    
+    }
+
+    cps();    
 
     exit(); 
 
