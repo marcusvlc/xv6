@@ -18,8 +18,7 @@ int main(int argc, char const *argv[]) {
        exit();
    }
 
-    printf(1, "pid=%d, prioridade anterior=%d\n", pid, getpriority(pid));
+    printf(1, "%d %d\n", pid, getpriority(pid));
     setpriority(pid, prioridade);
-   //printf(1, "A prioridade é %d\n", prioridade);
    exit();
 }
