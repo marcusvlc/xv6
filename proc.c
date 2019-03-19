@@ -346,7 +346,7 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
-      p->cputimes = p->cputimes + 1;
+      p->cputimes = p->cputimes + 1; // Incrementado quando ganha a CPU
 
       swtch(&(c->scheduler), p->context);
       switchkvm();

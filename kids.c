@@ -26,11 +26,7 @@ int main(int argc, char *argv[]) {
         }        
     }
 
-    if(id > 0){ // pai
-        for(k = 0; k < n ; k++){
-            wait();
-        }    
-    }
+    while (wait() != -1);
 
     cps();    
 

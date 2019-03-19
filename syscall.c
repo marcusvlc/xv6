@@ -137,6 +137,34 @@ static int (*syscalls[])(void) = {
 [SYS_setpriority]     sys_setpriority,
 };
 
+const char * name_syscalls[] = {
+"fork",
+"exit",
+"wait",
+"pipe",
+"read",
+"kill",
+"exec",
+"fstat",
+"chdir",
+"dup",
+"getpid",
+"sbrk",
+"sleep",
+"uptime",
+"open",
+"write",
+"mknod",
+"unlink",
+"link",
+"mkdir",
+"close",
+"cps",
+"getusage",
+"getpriority",
+"setpriority",
+};
+
 void
 syscall(void)
 {
@@ -146,7 +174,7 @@ syscall(void)
   num = curproc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     curproc->tf->eax = syscalls[num]();
-    cprintf("System call: %s \n", curproc -> name);
+    cprintf("System call: %s \n", name_syscalls[num]);
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             curproc->pid, curproc->name, num);
