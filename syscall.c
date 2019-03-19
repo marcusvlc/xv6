@@ -109,7 +109,6 @@ extern int sys_getpriority(void);
 extern int sys_setpriority(void);
 
 
-
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
 [SYS_exit]    sys_exit,

@@ -13,6 +13,9 @@ struct cpu {
 extern struct cpu cpus[NCPU];
 extern int ncpu;
 
+extern int interruptProcess(int ticks);
+
+
 //PAGEBREAK: 17
 // Saved registers for kernel context switches.
 // Don't need to save all the segment registers (%cs, etc),

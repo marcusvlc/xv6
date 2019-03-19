@@ -20,6 +20,8 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+int concactArray(int *array);
+
 void
 pinit(void)
 {
@@ -544,19 +546,20 @@ int cps() {
   sti();
 
   acquire(&ptable.lock); // Pega a tabela de processos
-  cprintf("name \t pID \t priority\t state \n");
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos, printando as informações
-      
-      if ( p->state == SLEEPING )
-        cprintf("%s \t %d  \t %d \t        SLEEPING \n", p->name, p->pid, p->priority);
-      else if ( p->state == RUNNING )
-        cprintf("%s \t %d  \t %d \t        RUNNING \n", p->name, p->pid, p->priority);
-      else if( p->state == ZOMBIE)
-        cprintf("%s \t %d  \t %d \t        ZOMBIE \n", p->name, p->pid, p->priority);
-     else if( p->state == RUNNABLE)
-        cprintf("%s \t %d  \t %d \t        RUNNABLE \n", p->name, p->pid, p->priority);
-     else if( p->state == EMBRYO)
-        cprintf("%s \t %d  \t %d \t        EMBRYO \n", p->name, p->pid, p->priority);
+  cprintf("----------------------------------------- \n");
+  cprintf("name \t pID \t priority \t state \n");
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){  // Varre a tabela de processos, printando as informações
+   
+    if ( p->state == SLEEPING )
+      cprintf("%s \t %d \t %d \t \t SLEEPING \n", p->name, p->pid, p->priority);
+    else if ( p->state == RUNNING )
+      cprintf("%s \t %d \t %d \t \t RUNNING \n", p->name, p->pid, p->priority);
+    else if( p->state == ZOMBIE)
+      cprintf("%s \t %d \t %d \t \t ZOMBIE \n", p->name, p->pid, p->priority);
+    else if( p->state == RUNNABLE)
+      cprintf("%s \t %d \t %d \t \t RUNNABLE \n", p->name, p->pid, p->priority);
+    else if( p->state == EMBRYO)
+      cprintf("%s \t %d \t %d \t \t EMBRYO \n", p->name, p->pid, p->priority);
   }
 
   release(&ptable.lock);
@@ -615,4 +618,36 @@ int setpriority(int pid, int prio){
   
   release(&ptable.lock);
   return pid;
+}
+
+// Metodo que seleciona o ultimo processo "matavel" da tabela de processos e o mata.
+// Chamado a cada X ticks de interrupcao, onde X pode ser alterado. Padrao: 500 interrupcoes.
+int interruptProcess(int ticks) {
+
+  struct proc *p;
+  struct proc *killed;
+  
+  int pidToKill = 0;
+
+  acquire(&ptable.lock);
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Pega o ultimo processo "matavel" da tabela de processos.
+    if(p->state != UNUSED && p->pid > 2) {
+      killed = p;
+      pidToKill = p->pid;
+    } 
+  }
+
+  release(&ptable.lock);
+
+  if(pidToKill != 0) {
+    cprintf("----------------------------------------- \n");
+    cprintf("%s \t %d \t %d \t \t KILLED \n", killed->name, pidToKill, killed->priority);
+    kill(pidToKill);
+    
+  }
+  
+  
+
+  return -1;
 }

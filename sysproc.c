@@ -122,4 +122,3 @@ int sys_setpriority(void) {
   
   return setpriority(pid,prio);
 }
-
