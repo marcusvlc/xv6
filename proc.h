@@ -52,7 +52,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-  int priority;                 // Prioridade do Processo (0-10)
+  int priority;                 // Prioridade do Processo (0-31)
   int cputimes;                // Quantas vezes o processo ganhou a CPU
 };
 

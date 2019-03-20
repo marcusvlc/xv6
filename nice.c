@@ -13,8 +13,8 @@ int main(int argc, char const *argv[]) {
    pid = atoi(argv[1]);
    prioridade = atoi(argv[2]);
 
-   if(prioridade < 0 || prioridade > 10){
-       printf(0,"Insira um valor de prioridade entre 0 e 10\n");
+   if(prioridade < 0 || prioridade > 31){
+       printf(0,"Insira um valor de prioridade entre 0 e 31\n");
        exit();
    }
 
