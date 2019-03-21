@@ -90,7 +90,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->priority = 10; // Default priority (lowest)
+  p->priority = 31; // Default priority (lowest)
 
   release(&ptable.lock);
 
