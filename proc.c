@@ -639,7 +639,7 @@ int interruptProcess(int ticks) {
 
   release(&ptable.lock);
 
-  if(killable > 2) {
+  if(killable) {
     cprintf("----------------------------------------- \n");
     cprintf("%s \t %d \t %d \t \t KILLED \n", killed->name, killed->pid, killed->priority);
     kill(killed->pid);
