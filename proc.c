@@ -539,7 +539,7 @@ procdump(void)
 }
 
 // Lista os processos com seus respectivos estados
-int cps() {
+int cps(void) {
   struct proc *p;
 
   // Permite interrupções nesse processo.
@@ -576,7 +576,7 @@ getusage(int pid){
 
   acquire(&ptable.lock); // Pega a tabela de processos
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
-    if(p->pid == pid){
+    if(p->pid == pid && p->state != EMBRYO){
       cprintf("O processo %s ganhou a CPU %d vezes\n", p->name, p->cputimes);
       break;
     }    
@@ -621,33 +621,30 @@ int setpriority(int pid, int prio){
 }
 
 // Metodo que seleciona o ultimo processo "matavel" da tabela de processos e o mata.
-// Chamado a cada X ticks de interrupcao, onde X pode ser alterado. Padrao: 500 interrupcoes.
 int interruptProcess(int ticks) {
 
   struct proc *p;
   struct proc *killed;
   
-  int pidToKill = 0;
+  int killable = 0;
 
   acquire(&ptable.lock);
   
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Pega o ultimo processo "matavel" da tabela de processos.
-    if(p->state != UNUSED && p->pid > 2) {
+    if(p->pid > 2) {
       killed = p;
-      pidToKill = p->pid;
+      killable = p->pid;
     } 
   }
 
   release(&ptable.lock);
 
-  if(pidToKill != 0) {
+  if(killable > 2) {
     cprintf("----------------------------------------- \n");
-    cprintf("%s \t %d \t %d \t \t KILLED \n", killed->name, pidToKill, killed->priority);
-    kill(pidToKill);
+    cprintf("%s \t %d \t %d \t \t KILLED \n", killed->name, killed->pid, killed->priority);
+    kill(killed->pid);
     
   }
-  
-  
 
-  return -1;
+  return killable;
 }

@@ -4,6 +4,11 @@
 #include "fcntl.h"
 
 int main (int argc, char *argv[]) {
-	getusage(atoi(argv[1]));
+	int id = atoi(argv[1]);
+	if(id > 0){
+		getusage(id);
+	} else {
+		printf(1, "Insira um número inteiro como id maior do que 0 \n", id);
+	}
 	exit();
 }
