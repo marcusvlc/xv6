@@ -22,6 +22,14 @@ static void wakeup1(void *chan);
 
 int concactArray(int *array);
 
+unsigned long randstate = 1;
+unsigned int
+rand()
+{
+  randstate = randstate * 1664525 + 1013904223;
+  return randstate;
+}
+
 void
 pinit(void)
 {
@@ -315,6 +323,22 @@ wait(void)
   }
 }
 
+int selectProcessClass(void){
+  int classRange = (rand() % 100);
+  int resultClass;
+
+  if(classRange >= 0 && classRange <= 49){
+    resultClass = 0;
+  } else if(classRange > 49 && classRange <= 84) {
+    resultClass = 1;
+  } else {
+    resultClass = 2;
+  }
+
+  return resultClass;
+ 
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -343,6 +367,7 @@ scheduler(void)
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
+      cprintf("%d ---------------- \n", selectProcessClass());
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
@@ -359,6 +384,7 @@ scheduler(void)
 
   }
 }
+
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
