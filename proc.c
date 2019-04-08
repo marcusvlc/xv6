@@ -625,7 +625,6 @@ getusage(int pid){
   acquire(&ptable.lock); // Pega a tabela de processos
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
     if(p->pid == pid && p->state != EMBRYO){
-      // cprintf("O processo %s ganhou a CPU %d vezes\n", p->name, p->cputimes);
       break;
     }    
   }   
