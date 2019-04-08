@@ -4,7 +4,6 @@
 #include "fcntl.h"
 
 int main(int argc, char *argv[]) {
-
     int k, n, id;
 
     if(argc < 2)

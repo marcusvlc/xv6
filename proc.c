@@ -351,29 +351,50 @@ void
 scheduler(void)
 {
   struct proc *p;
+  struct proc *selectedProc;
   struct cpu *c = mycpu();
   c->proc = 0;
   
   for(;;){
     // Enable interrupts on this processor.
     sti();
-
+    int selectedClass = selectProcessClass();
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
 
+      if(selectedClass == 0) {
+        if(p->priority >= 0 && p->priority <= 7) {
+          selectedProc = p;
+        }  else {
+          continue;
+        }
+      } else if(selectedClass == 1 ){
+          if(p->priority >= 8 && p->priority <= 15) {
+            selectedProc = p;
+          } else {
+            continue;
+          }
+      } else {
+          if(p->priority >= 16 && p->priority <= 31) {
+            selectedProc = p;
+          } else {
+            continue;
+          }
+      }
+
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
-      cprintf("%d ---------------- \n", selectProcessClass());
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-      p->cputimes = p->cputimes + 1; // Incrementado quando ganha a CPU
+      c->proc = selectedProc;
+      cprintf("%s -- %d \n", selectedProc->name, selectedProc->priority);
+      switchuvm(selectedProc);
+      selectedProc->state = RUNNING;
+      selectedProc->cputimes = selectedProc->cputimes + 1; // Incrementado quando ganha a CPU
 
-      swtch(&(c->scheduler), p->context);
+      swtch(&(c->scheduler), selectedProc->context);
       switchkvm();
 
       // Process is done running for now.
