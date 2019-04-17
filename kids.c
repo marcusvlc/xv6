@@ -4,16 +4,14 @@
 #include "fcntl.h"
 
 int main(int argc, char *argv[]) {
-
     int k, n, id;
 
     if(argc < 2)
-        n = 1;  // quant filhos default 
+        n = 5;  // quant filhos default 
     else 
         n = atoi(argv[1]); // quant filhos linha comando
+
     
-    if(n < 0 || n > 20) // validar quant filhos
-        n = 1;
     
     id = 0;
     for(k = 0; k < n; k++){
@@ -23,7 +21,9 @@ int main(int argc, char *argv[]) {
             sleep(500);
             cps();
             exit();
-        }        
+        } else {
+            setpriority(id, k);
+        }       
     }
 
     while (wait() != -1);

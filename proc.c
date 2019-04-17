@@ -22,6 +22,14 @@ static void wakeup1(void *chan);
 
 int concactArray(int *array);
 
+unsigned long randstate = 1;
+unsigned int
+rand()
+{
+  randstate = randstate * 1664525 + 1013904223;
+  return randstate;
+}
+
 void
 pinit(void)
 {
@@ -315,6 +323,22 @@ wait(void)
   }
 }
 
+int selectProcessClass(void){
+  int classRange = (rand() % 100);
+  int resultClass;
+
+  if(classRange >= 0 && classRange <= 49){
+    resultClass = 0;
+  } else if(classRange > 49 && classRange <= 84) {
+    resultClass = 1;
+  } else {
+    resultClass = 2;
+  }
+
+  return resultClass;
+ 
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -327,28 +351,51 @@ void
 scheduler(void)
 {
   struct proc *p;
+  struct proc *selectedProc;
   struct cpu *c = mycpu();
   c->proc = 0;
   
   for(;;){
     // Enable interrupts on this processor.
     sti();
-
+    int selectedClass = selectProcessClass();
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
+      if(p->state != RUNNABLE && p->state != SLEEPING)
         continue;
+
+      if(selectedClass == 0) {
+        if(p->priority >= 0 && p->priority <= 7) {
+          selectedProc = p;
+        }  else {
+          continue;
+        }
+      } else if(selectedClass == 1 ){
+          if(p->priority >= 8 && p->priority <= 15 && p->state != SLEEPING) {
+            selectedProc = p;
+          } else {
+            continue;
+          }
+      } else {
+          if(p->priority >= 16 && p->priority <= 31 && p->state != SLEEPING) {
+            selectedProc = p;
+          } else {
+            continue;
+          }
+      }
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-      p->cputimes = p->cputimes + 1; // Incrementado quando ganha a CPU
+      c->proc = selectedProc;
+      cprintf("---------------------------------------------------------- \n");
+      cprintf("%s \t %d \t %d \t \t %d \t \t SCHEDULED \n", selectedProc->name, selectedProc->pid, selectedProc->priority, selectedProc->cputimes);
+      switchuvm(selectedProc);
+      selectedProc->state = RUNNING;
+      selectedProc->cputimes = selectedProc->cputimes + 1; // Incrementado quando ganha a CPU
 
-      swtch(&(c->scheduler), p->context);
+      swtch(&(c->scheduler), selectedProc->context);
       switchkvm();
 
       // Process is done running for now.
@@ -359,6 +406,7 @@ scheduler(void)
 
   }
 }
+
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
@@ -546,20 +594,20 @@ int cps(void) {
   sti();
 
   acquire(&ptable.lock); // Pega a tabela de processos
-  cprintf("----------------------------------------- \n");
-  cprintf("name \t pID \t priority \t state \n");
+  cprintf("---------------------------------------------------------- \n");
+  cprintf("name \t pID \t priority \t cpuTimes \t state \n");
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){  // Varre a tabela de processos, printando as informações
    
     if ( p->state == SLEEPING )
-      cprintf("%s \t %d \t %d \t \t SLEEPING \n", p->name, p->pid, p->priority);
+      cprintf("%s \t %d \t %d \t \t %d \t \t SLEEPING \n", p->name, p->pid, p->priority, p->cputimes);
     else if ( p->state == RUNNING )
-      cprintf("%s \t %d \t %d \t \t RUNNING \n", p->name, p->pid, p->priority);
+      cprintf("%s \t %d \t %d \t \t %d \t \t RUNNING \n", p->name, p->pid, p->priority, p->cputimes);
     else if( p->state == ZOMBIE)
-      cprintf("%s \t %d \t %d \t \t ZOMBIE \n", p->name, p->pid, p->priority);
+      cprintf("%s \t %d \t %d \t \t %d \t \t ZOMBIE \n", p->name, p->pid, p->priority, p->cputimes);
     else if( p->state == RUNNABLE)
-      cprintf("%s \t %d \t %d \t \t RUNNABLE \n", p->name, p->pid, p->priority);
+      cprintf("%s \t %d \t %d \t \t %d \t \t RUNNABLE \n", p->name, p->pid, p->priority, p->cputimes);
     else if( p->state == EMBRYO)
-      cprintf("%s \t %d \t %d \t \t EMBRYO \n", p->name, p->pid, p->priority);
+      cprintf("%s \t %d \t %d \t \t %d \t \t EMBRYO \n", p->name, p->pid, p->priority, p->cputimes);
   }
 
   release(&ptable.lock);
@@ -577,12 +625,11 @@ getusage(int pid){
   acquire(&ptable.lock); // Pega a tabela de processos
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
     if(p->pid == pid && p->state != EMBRYO){
-      cprintf("O processo %s ganhou a CPU %d vezes\n", p->name, p->cputimes);
       break;
     }    
   }   
   release(&ptable.lock);
-  return 25;
+  return p->cputimes;
 }
 
 // Obtendo prioridade
@@ -640,10 +687,9 @@ int interruptProcess(int ticks) {
   release(&ptable.lock);
 
   if(killable) {
-    cprintf("----------------------------------------- \n");
-    cprintf("%s \t %d \t %d \t \t KILLED \n", killed->name, killed->pid, killed->priority);
     kill(killed->pid);
-    
+    cprintf("---------------------------------------------------------- \n");
+    cprintf("%s \t %d \t %d \t \t %d \t \t KILLED \n", killed->name, killed->pid, killed->priority, killed->cputimes);    
   }
 
   return killable;
