@@ -99,6 +99,7 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->priority = 31; // Default priority (lowest)
+  p->initPriority = 31;
 
   release(&ptable.lock);
 
@@ -362,7 +363,7 @@ scheduler(void)
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE && p->state != SLEEPING)
+      if(p->state != RUNNABLE )
         continue;
 
       if(selectedClass == 0) {
@@ -372,19 +373,18 @@ scheduler(void)
           continue;
         }
       } else if(selectedClass == 1 ){
-          if(p->priority >= 8 && p->priority <= 15 && p->state != SLEEPING) {
+          if(p->priority >= 8 && p->priority <= 15) {
             selectedProc = p;
           } else {
             continue;
           }
       } else {
-          if(p->priority >= 16 && p->priority <= 31 && p->state != SLEEPING) {
+          if(p->priority >= 16 && p->priority <= 31) {
             selectedProc = p;
           } else {
             continue;
           }
       }
-
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
@@ -395,6 +395,9 @@ scheduler(void)
       selectedProc->state = RUNNING;
       selectedProc->cputimes = selectedProc->cputimes + 1; // Incrementado quando ganha a CPU
 
+      if(selectedProc->priority != selectedProc->initPriority) {
+        selectedProc->priority = selectedProc->initPriority;
+      }
       swtch(&(c->scheduler), selectedProc->context);
       switchkvm();
 
@@ -491,6 +494,7 @@ sleep(void *chan, struct spinlock *lk)
   // Go to sleep.
   p->chan = chan;
   p->state = SLEEPING;
+  p->priority = 0;
 
   sched();
 
@@ -659,6 +663,7 @@ int setpriority(int pid, int prio){
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // Varre a tabela de processos procurando o processo especificado
     if(p -> pid == pid){
       p->priority = prio;
+      p->initPriority = prio;
       break;
     }
   }
