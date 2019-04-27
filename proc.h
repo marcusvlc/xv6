@@ -53,6 +53,7 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int priority;                 // Prioridade do Processo (0-31)
+  int initPriority;
   int cputimes;                // Quantas vezes o processo ganhou a CPU
 };
 
