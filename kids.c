@@ -5,10 +5,10 @@
 #include "date.h"
 
 int main(int argc, char *argv[]) {
-    int startTicks = uptime();
+    long startTicks = uptime();  // quant ticks no início
     int k, n, id;
 
-    if(argc < 2)
+    if(argc < 2 || argc > 32)
         n = 5;  // quant filhos default 
     else 
         n = atoi(argv[1]); // quant filhos linha comando
@@ -22,16 +22,12 @@ int main(int argc, char *argv[]) {
             cps();
             int count = 0;
             int i = 0;
-           for(i = 1; i <= 9999999999;i++){
-
-            count = (count * 238741225925952989 + 9823444724)%3768232368993;
-
-         }
-
-
+            for(i = 1; i <= 9999999999;i++){
+                count = (count * 238741225925952989 + 9823444724) % 3768232368993;
+            }
             cps();
             exit();
-        } else {
+        } else { // pai
             setpriority(id, k);
         }       
     }
@@ -40,11 +36,10 @@ int main(int argc, char *argv[]) {
 
     cps();    
 
-    int endTicks = uptime();
+    long endTicks = uptime();  // quant ticks no final
 
-    //float seconds = (float)(endTicks - startTicks)/100;
-
-    printf(1, "\n Start ticks: %d Endticks: %d \n", startTicks, endTicks);
+    printf(2, "\nQuantidade Inicial de Ticks: %d\n", startTicks);
+    printf(2, "Quantidade Final de Ticks: %d\n", endTicks);
 
     exit(); 
 
