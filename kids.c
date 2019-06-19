@@ -20,7 +20,15 @@ int main(int argc, char *argv[]) {
         id = fork();
         if(id == 0){ // filho
             cps();
-            sleep(500);
+            int count = 0;
+            int i = 0;
+           for(i = 1; i <= 9999999999;i++){
+
+            count = (count * 238741225925952989 + 9823444724)%3768232368993;
+
+         }
+
+
             cps();
             exit();
         } else {
@@ -34,9 +42,9 @@ int main(int argc, char *argv[]) {
 
     int endTicks = uptime();
 
-    int seconds = (endTicks - startTicks)/100;
+    //float seconds = (float)(endTicks - startTicks)/100;
 
-    printf(1, "\n Tempo em segundos da execucao do kids: %d segundos \n", seconds);
+    printf(1, "\n Start ticks: %d Endticks: %d \n", startTicks, endTicks);
 
     exit(); 
 
