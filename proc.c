@@ -389,8 +389,8 @@ scheduler(void)
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
       c->proc = selectedProc;
-      cprintf("---------------------------------------------------------- \n");
-      cprintf("%s \t %d \t %d \t \t %d \t \t SCHEDULED \n", selectedProc->name, selectedProc->pid, selectedProc->priority, selectedProc->cputimes);
+      //cprintf("---------------------------------------------------------- \n");
+      //cprintf("%s \t %d \t %d \t \t %d \t \t SCHEDULED \n", selectedProc->name, selectedProc->pid, selectedProc->priority, selectedProc->cputimes);
       switchuvm(selectedProc);
       selectedProc->state = RUNNING;
       selectedProc->cputimes = selectedProc->cputimes + 1; // Incrementado quando ganha a CPU

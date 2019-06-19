@@ -2,8 +2,10 @@
 #include "stat.h"
 #include "user.h"
 #include "fcntl.h"
+#include "date.h"
 
 int main(int argc, char *argv[]) {
+    int startTicks = uptime();
     int k, n, id;
 
     if(argc < 2)
@@ -29,6 +31,12 @@ int main(int argc, char *argv[]) {
     while (wait() != -1);
 
     cps();    
+
+    int endTicks = uptime();
+
+    int seconds = (endTicks - startTicks)/100;
+
+    printf(1, "\n Tempo em segundos da execucao do kids: %d segundos \n", seconds);
 
     exit(); 
 
