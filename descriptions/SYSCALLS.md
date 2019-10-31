@@ -72,7 +72,6 @@
             
         SYSCALL (myCommand)
 
-Did you think it was over?
 
 - In **syscall.c**:
 
@@ -99,34 +98,42 @@ Did you think it was over?
 
     - If there are parameters, a model follows:
 
-#include "types.h"
-#include "stat.h"
-#include "user.h"
-#include "fcntl.h"
+            #include "types.h"
+            #include "stat.h"
+            #include "user.h"
+            #include "fcntl.h"
 
-int main (int argc, char const * argv []) {
-  int attribute1, ..., attributeN;
+            int main (int argc, char const * argv []) {
+              int attribute1, ..., attributeN;
 
-  if (argc <a) {// a = Number of Arguments =
-// Function Name + Parameters
-      exit ();
-  }
+              if (argc <a) {
+                
+              // a = Number of Arguments = Function Name + Parameters
 
-  integer1 attribute = acti (argv [1]);
-  ....
-  Integer attribute = acti (argv [N]);
+                  exit ();
+              }
 
-  myCode (attribute1, ..., attributeN);
-  exit ();
-}
-Finally, in the Makefile file:
-Add your command on UPROGS (from line 168) following the template:
-_myCommand \
-In EXTRA (from line 252) put myCommand.c at the end of line 254, like this:
-wc.c zombie.c ... myCommand.c \
-Rest and be happy :)
+              integer1 attribute = acti (argv [1]);
+              
+                ....
+
+              Integer attribute = acti (argv [N]);
+
+              myCode (attribute1, ..., attributeN);
+              exit ();
+            }
+
+- Finally, in the **Makefile** file:
+    - Add your command on `UPROGS` (from line 168) following the template:
+        
+            _myCommand\
+
+    - In `EXTRA` (from line 252) put **myCommand.c** at the end of line 254, like this:
+
+            wc.c zombie.c ... myCommand.c\
 
 
 
-*And that's all folks !!!*
+
+  *And that's all folks !!!*
 
