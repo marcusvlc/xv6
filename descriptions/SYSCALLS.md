@@ -22,80 +22,109 @@
     - The functions are being defined (respecting the “syscall.c interface”), where the parameters are required and the function is properly called, being implemented in **proc.c**.
 
 
-<!-- AQUI AINDA ESTÁ EM PORTUGUÊS 
+## How to create a System Call
 
+- In the **syscall.h** file add a line following the template:
 
-Como criar uma System Call
-No arquivo syscall.h adicione uma linha seguindo o template:
-#define SYS_seuComando
-No arquivo defs.h, onde tem o comentário // proc.c, coloque a assinatura da função;
-Em user.h, sob o comentário // system calls, também adicione a assinatura da função;
-Em proc.c, implemente sua função no final do arquivo;
-Em sysproc.c, no final do arquivo:
-Se o comando não tem parâmetros, adicione da seguinte forma:
-int sys_meuComando(void) { return meuComando(); }
-Se o comando tiver parâmetros, adicione da seguinte forma:
-int sys_meuComando(void) {
- int atributo1, ... , atributoN;
+        #define SYS_yourCommand
 
- // Aqui você coloca os argumentos da sua função correlacionando com os parâmetros
+- In the **defs.h** file, below the comment
 
- if(argint(0, &atributo1) < 0) 
-   return -1;
+        // proc.c 
 
-  .....
+    put the signature of the function.
 
- if(argint(N-1, &atributoN) < 0)
-   return -1;
-  return meuComando(atributo1,..., atributoN);
-}
-Em usys.S adicione o nome da sua função no molde:
-SYSCALL(meuComando)
-Achou que tinha acabado ?
+- In **user.h**, under the comment 
 
-Em syscall.c:
-Coloque no bloco de declarações extern (a partir da linha 85) da seguinte forma:
-extern int sys_meuComando(void)
-Mais abaixo, no array syscalls (a partir da linha 111), adicione a seguinte linha no final do array:
-[SYS_meuComando] sys_meuComando,
-Crie um arquivo meuComando.c que irá chamar sua função:
-Se não houverem parâmetros, eis uma sugestão de modelo:
-#include “types.h”
-#include “stat.h”
-#include “user.h”
-#include “fcntl.h”
+        // system calls 
+        
+    also add the function signature.
 
-int main (int argc, char *argv[]) {
-	meuComando();
-	exit();
-}
-Caso hajam parâmetros, um modelo segue adiante:
+- In **proc.c**, implement your function at the end of the file.
+
+- In **sysproc.c**, at the end of the file:
+    - If the command has no parameters, add as follows:
+
+            int sys_myCommand (void) {return myCommand (); }
+
+    - If the command has parameters, add as follows:
+
+            int sys_myCommand (void) {
+                               
+                int attribute1, ..., attributeN;
+
+                // Here you put the arguments of your function correlating 
+                // with the parameters
+
+                if (argint (0, & attribute1) <0)
+                  return -1;
+                
+                .....
+
+                if (argint (N-1, & attributeN) <0)
+                   return -1;
+                 
+                return myCommand (attribute1, ..., attributeN);
+    
+            }
+
+- In **usys.S** add the name of your function in the template:
+            
+        SYSCALL (myCommand)
+
+Did you think it was over?
+
+- In **syscall.c**:
+
+    - Put in the extern declaration block (starting at line 85) as follows:
+
+            extern int sys_myCommand (void)
+
+    - Below, in the syscalls array (starting at line 111), add the following line to the end of the array:
+
+            [SYS_myCommand] sys_myCommand
+
+- Create a **myCommand.c** file that will call your function:
+    - If there are no parameters, here's a model suggestion:
+
+            #include “types.h”
+            #include “stat.h”
+            #include “user.h”
+            #include “fcntl.h”
+
+            int main (int argc, char * argv []) {
+               myCommand ();
+               exit ();
+            }
+
+    - If there are parameters, a model follows:
+
 #include "types.h"
 #include "stat.h"
 #include "user.h"
 #include "fcntl.h"
 
-int main(int argc, char const *argv[]) {
-  int atributo1,..., atributoN;
+int main (int argc, char const * argv []) {
+  int attribute1, ..., attributeN;
 
-  if(argc < a ){ // a = Número de Argumentos = 
-			 // Nome da Função+Parâmetros Dela
-      exit();
-  }
+  if (argc <a) {// a = Number of Arguments =
+// Function Name + Parameters
+      exit ();
+  }
 
-  atributo1Inteiro = atoi(argv[1]);
-  ....
-  atributoNInteiro = atoi(argv[N]);
+  integer1 attribute = acti (argv [1]);
+  ....
+  Integer attribute = acti (argv [N]);
 
-  meuComado(atributo1, ..., atributoN);
-  exit();
+  myCode (attribute1, ..., attributeN);
+  exit ();
 }
-Por fim, no arquivo Makefile:
-Adicione seu comando em UPROGS (a partir da linha 168) seguindo o template:
-_meuComando\
-Em EXTRA (a partir da linha 252) coloque meuComando.c no final da linha 254, ficando assim:
-wc.c zombie.c ... meuComando.c\
-Descanse e seja feliz :) -->
+Finally, in the Makefile file:
+Add your command on UPROGS (from line 168) following the template:
+_myCommand \
+In EXTRA (from line 252) put myCommand.c at the end of line 254, like this:
+wc.c zombie.c ... myCommand.c \
+Rest and be happy :)
 
 
 
