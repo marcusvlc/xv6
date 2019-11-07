@@ -1,14 +1,16 @@
-<!-- 
-Task 04 - Implementar getusage
+# Implementing _getUsage_
 
-Passos seguidos:
+## Step by step
 
-Foi criado o atributo cputimes que será uma espécie de contador, guardando a informação de quantas vezes o processo ganhou a CPU;
-Em allocproc o valor de cputimes foi setado para 0 assim que ele criado como UNUSED, pois apesar do processo ter sido criado ele ainda não ganhou a CPU;
- No escalonador, assim que o processo tem seu estado setado como RUNNING, o cputimes é incrementado;
-Seguindo o procedimento de criação de uma system call, ao utilizarmos o ps para listar os processos e obter seus ids, e chamarmos o getusage passando o id como parâmetro, obtemos o valor de cputimes;
-O id precisa ser maior do que 0 (tratado em getusage.c).
-Assim, saberemos quantas vezes o processo ganhou a CPU.
+- In **proc.h**:
+  - The _cputimes_ attribute was created, which will be a kind of counter, keeping the information on how many times the process got the CPU.
+  
+- In **allocproc**:
+  - The value of cputimes was set to 0 as soon as it was created as UNUSED, because although the process was created it has not yet gained the CPU.
 
-
- -->
+- In **scheduler**:
+  - As soon as the process is set to RUNNING, _cputimes_ is incremented.
+  
+ ## _getUsage_
+  
+ Following the procedure of creating a system call, using _ps_ to list the processes and get their _ids_, and calling _getUsage_ with the _id_ as a parameter, we get the value of _cputimes_. The id must be greater than 0 (handled in **getusage.c**). So we will know how many times the process has gained the CPU.
