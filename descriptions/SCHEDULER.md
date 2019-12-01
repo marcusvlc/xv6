@@ -1,27 +1,15 @@
-<!-- # Lab 3: Escalonador
+# Priority Scheduler
 
-Como os processos tem prioridades que vão de 0 a 31 (sendo 0 a prioridade máxima) dividiremos os processos em 3 classes: classe 0, que abrange os processos cuja prioridade vai de 0 a 7, a classe 1, onde a prioridade vai de 8 a 15 e a classe 2, com prioridade que vai de 16 a 31.
+Since processes have priorities ranging from 0 to 31 (0 being the highest priority) we will divide the processes into 3 classes: class 0, which covers processes whose priority goes from 0 to 7, class 1, where the priority goes from 8 15 and class 2, with priority ranging from 16 to 31.
 
-Uma vez divido em classes, nós iremos gerar um número aleatório entre 0 e 99, o qual será utilizado para mapear para uma das classes. Tal mapeamento será feito da seguinte forma: se o número randomico estiver entre 0 e 49, a classe 0 será escolhida; caso esteja entre 50 e 84, a classe 1 será escolhida; e entre 85 e 99, a classe 2 será escolhida. 
+Once divided into classes, we will generate a random number between 0 and 99, which will be used to map to one of the classes. Such mapping will be done as follows: if the random number is between 0 and 49, class 0 will be chosen; if it is between 50 and 84, class 1 will be chosen; and between 85 and 99, class 2 will be chosen. Thus, we chose the first _RUNNABLE_ process of that class and put it to run (**Round-Robin** within the classes).
 
-O mapeamento foi feito dessa forma para garantir que a classe 0 seja escolhida com mais frequência, seguido da classe 1 e por fim a classe 2. Dessa forma garantimos o favorecimento dos processos com maior prioridade e, por utilizarmos um algoritmo probabilístico, garantimos a não ocorrência de *starvation*.
+## Prioritizing Processes That are no Longer Blocked
 
+The _initPriority_ attribute has been added to the process which, as well as the priority, when process is created has the value 31. When the priority value is modified through _setPriority_, _initPriority_ is also modified.
 
+When the process is blocked, the priority is changed to 0, so that it gets top priority and is more likely to be escalated. When the process is scheduled, it is checked that _initPriority_ and _priority_ are the same. If not, _initPriority_ is set to the priority value
 
+## Conclusions:
 
-
-
-
-
-
-
-
-Escalonamento com prioridade:
-Atribuímos um valor randômico a uma das classes (0, 1 ou 2) o qual vai determinar qual classe foi escolhida. Dessa forma, escolhemos o primeiro processo RUNNABLE daquela classe e colocamos para rodar (Round-Robin dentro das classes).
-Not Starvation:
-Por se tratar de um algoritmo probabilístico, sempre há a possibilidade de um processo da classe 2 ser escolhido ao invés de um processo da classe 0. 
-Priorizar processos que deixaram de estar bloqueados:
-Foi adicionado ao processo o atributo initPriority que, assim como o priority, quando processo é criado possui o valor 31.
-Quando o valor do priority é modificado através do setPriority, o initPriority também é modificado.
-Quando o processo é bloqueado, o priority é alterado para 0, de forma que ele ganha prioridade máxima, tendo maior probabilidade de ser escalonado.
-Quando o processo é escalonado, é verificado se o initPriority e o priority são iguais. Caso não forem, o initPriority é setado com o valor do priority. -->
+The mapping was done this way to ensure that class 0 is chosen more often, followed by class 1 and finally class 2. This way we guarantee the favoring of the processes with higher priority and, by using a probabilistic algorithm, we guarantee no occurrence. from **starvation**.
