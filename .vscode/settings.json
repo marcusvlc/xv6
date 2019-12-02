@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "spinlock.h": "c",
-        "stdio.h": "c",
-        "stdlib.h": "c",
-        "time.h": "c"
-    }
-}
